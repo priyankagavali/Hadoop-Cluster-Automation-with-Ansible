@@ -1,0 +1,50 @@
+- hosts: namenode 
+  vars_files: 
+    - master_var.yml
+
+  tasks:
+
+  - copy:
+       dest: "/root/"
+       src: "{{hadoop_path}}"
+  - copy:
+       src: "{{java_path}}"
+       dest: "/root/"
+
+  - name: "installing hadoop"
+    shell: "rpm -ivh {{hadoop}} --force"
+    register: hadoop
+    ignore_errors: yes
+
+  - debug:
+        var: hadoop.stdout
+
+  - name: "installing jdk"
+    shell: "rpm -ivh {{java}}"
+    register: java
+    ignore_errors: yes
+
+  - debug:
+        var: java.stdout
+
+  - name: "configure hdfs file"
+    copy:
+        src: "{{hdfs}}"
+        dest: "/etc/hadoop"
+
+  - name: "configure core file"
+    copy:
+        src: "{{core}}"
+        dest: "/etc/hadoop"
+
+  - name: "formatting namenode"
+    shell: "echo Y | hadoop namenode -format"
+    register: ft
+
+  - debug:
+        var: ft.stdout     
+
+  
+  - name: "start service"
+    shell: "hadoop-daemon.sh start namenode"    
+

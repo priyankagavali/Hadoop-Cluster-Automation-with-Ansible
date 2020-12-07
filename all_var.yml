@@ -1,0 +1,11 @@
+java_path: "/root/jdk-8u171-linux-x64.rpm"
+hadoop_path: "/root/hadoop.rpm"
+java: "jdk-8u171-linux-x64.rpm"
+hadoop: "hadoop.rpm"
+core: "/root/core-site.xml"
+hdfs: "/root/hdfs-site.xml"
+hdfs_datanode: "/task/hdfs-site.xml"
+report: "hadoop fs -ls /"
+file: "hhh.txt"
+upload: "hadoop fs -put /root/{{file}} / "
+

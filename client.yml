@@ -1,0 +1,50 @@
+- hosts: client
+  vars_files:
+    - all_var.yml
+
+  tasks:
+
+  - copy:
+       dest: "/root/"
+       src: "{{hadoop_path}}"
+  - copy:
+       src: "{{java_path}}"
+       dest: "/root/"
+
+  - name: "installing hadoop"
+    shell: "rpm -ivh {{hadoop}} --force"
+    register: hadoop
+    ignore_errors: yes
+
+  - debug:
+        var: hadoop.stdout
+
+  - name: "installing jdk"
+    shell: "rpm -ivh {{java}}"
+    register: java
+    ignore_errors: yes
+
+  - debug:
+        var: java.stdout
+
+  - name: "configure core  file"
+    copy:
+        src: "{{core}}"
+        dest: "/etc/hadoop"
+        
+  - name: "client file report"
+    shell: "{{report}}"
+    register: rp
+
+  - name: "show report"
+    debug:
+        var: rp.stdout
+
+  - copy:
+        src: "/root/{{file}}"
+        dest: "/root/"      
+
+  - name: "uploading files by client"
+    shell: "{{upload}}"
+    
+     
